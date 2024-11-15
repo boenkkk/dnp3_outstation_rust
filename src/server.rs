@@ -11,9 +11,9 @@ use dnp3::outstation::OutstationHandle;
 use crate::database::initialize_database;
 use crate::scheduler::run_scheduler;
 
-pub async fn run_server(mut server: Server) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn run_server(mut server: Server, _outstation_address: u16, _master_address: u16) -> Result<(), Box<dyn std::error::Error>> {
     let outstation = server.add_outstation(
-        get_outstation_config(),
+        get_outstation_config(1, 2),
         Box::new(ExampleOutstationApplication),
         Box::new(ExampleOutstationInformation),
         Box::new(ExampleControlHandler),

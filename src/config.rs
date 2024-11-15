@@ -3,9 +3,7 @@ use dnp3::link::*;
 use dnp3::outstation::*;
 use dnp3::outstation::database::EventBufferConfig;
 
-pub fn get_outstation_config() -> OutstationConfig {
-    let outstation_address = 1;
-    let master_address = 2;
+pub fn get_outstation_config(outstation_address: u16, master_address: u16) -> OutstationConfig {
     let mut config = OutstationConfig::new(
         EndpointAddress::try_new(outstation_address).unwrap(),
         EndpointAddress::try_new(master_address).unwrap(),
