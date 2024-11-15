@@ -11,6 +11,7 @@ mod server;
 mod scheduler;
 mod util;
 mod database;
+mod outstation;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
