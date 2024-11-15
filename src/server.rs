@@ -1,4 +1,6 @@
 // src/server.rs
+use std::sync::Arc;
+
 use crate::config::get_outstation_config;
 use crate::handlers::ExampleControlHandler;
 // use crate::outstation::{ExampleOutstationApplication, ExampleOutstationInformation};
@@ -11,6 +13,7 @@ use dnp3::tcp::*;
 use crate::time::{ExampleOutstationApplication, ExampleOutstationInformation};
 
 use dnp3::outstation::OutstationHandle;
+use crate::scheduler::run_scheduler;
 
 pub async fn run_server(mut server: Server) -> Result<(), Box<dyn std::error::Error>> {
     let outstation = server.add_outstation(
@@ -33,6 +36,11 @@ async fn run_outstation(
 ) -> Result<(), Box<dyn std::error::Error>> {
     outstation.enable().await?;
 
+    // Wrap the `OutstationHandle` in an `Arc` to share ownership
+    let outstation_arc = Arc::new(outstation);
+
+    // Pass the `Arc` to `run_scheduler`
+    run_scheduler(outstation_arc);
     loop {}
 }
 
