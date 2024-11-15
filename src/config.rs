@@ -1,4 +1,5 @@
-use dnp3::decode::AppDecodeLevel;
+use std::time::Duration;
+use dnp3::decode::{AppDecodeLevel, LinkDecodeLevel, PhysDecodeLevel, TransportDecodeLevel};
 use dnp3::link::*;
 use dnp3::outstation::*;
 use dnp3::outstation::database::EventBufferConfig;
@@ -10,7 +11,11 @@ pub fn get_outstation_config(outstation_address: u16, master_address: u16) -> Ou
         get_event_buffer_config(),
     );
     config.class_zero.octet_string = true;
+    config.keep_alive_timeout = Some(Duration::from_secs(10));
     config.decode_level.application = AppDecodeLevel::ObjectValues;
+    config.decode_level.transport = TransportDecodeLevel::Nothing;
+    config.decode_level.link = LinkDecodeLevel::Nothing;
+    config.decode_level.physical = PhysDecodeLevel::Nothing;
     config
 }
 
