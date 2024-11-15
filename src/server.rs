@@ -3,16 +3,12 @@ use std::sync::Arc;
 
 use crate::config::get_outstation_config;
 use crate::handlers::ExampleControlHandler;
-// use crate::outstation::{ExampleOutstationApplication, ExampleOutstationInformation};
-use dnp3::app::attr::{AttrProp, StringAttr};
-// use dnp3::app::measurement::*;
 use dnp3::app::NullListener;
-use dnp3::outstation::database::*;
-// use dnp3::outstation::*;
 use dnp3::tcp::*;
 use crate::time::{ExampleOutstationApplication, ExampleOutstationInformation};
 
 use dnp3::outstation::OutstationHandle;
+use crate::database::initialize_database;
 use crate::scheduler::run_scheduler;
 
 pub async fn run_server(mut server: Server) -> Result<(), Box<dyn std::error::Error>> {
@@ -42,55 +38,4 @@ async fn run_outstation(
     // Pass the `Arc` to `run_scheduler`
     run_scheduler(outstation_arc);
     loop {}
-}
-
-fn initialize_database(outstation: &OutstationHandle) {
-    outstation.transaction(|db| {
-        for i in 0..3 {
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                BinaryInputConfig {
-                    s_var: StaticBinaryInputVariation::Group1Var1,
-                    e_var: EventBinaryInputVariation::Group2Var2,
-                },
-            );
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                DoubleBitBinaryInputConfig::default(),
-            );
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                BinaryOutputStatusConfig::default(),
-            );
-            db.add(i, Some(EventClass::Class1), CounterConfig::default());
-            db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                AnalogInputConfig {
-                    s_var: StaticAnalogInputVariation::Group30Var1,
-                    e_var: EventAnalogInputVariation::Group32Var1,
-                    deadband: 0.0,
-                },
-            );
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                AnalogOutputStatusConfig::default(),
-            );
-            db.add(i, Some(EventClass::Class1), OctetStringConfig);
-        }
-
-        let _ = db.define_attr(
-            AttrProp::default(),
-            StringAttr::DeviceManufacturersName.with_value("Step Function I/O"),
-        );
-        let _ = db.define_attr(
-            AttrProp::writable(),
-            StringAttr::UserAssignedLocation.with_value("Bend, OR"),
-        );
-    });
 }
