@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+    app:
+        build: .
+        container_name: dnp3_outstation
+        environment:
+            - RUST_LOG=info  # Optional, configure your app's log level
+        volumes:
+            - .:/app
+        networks:
+            - app-tier
+#        ports:
+#             - "777:777"
+#        restart: always
+        command: ["dnp3_outstation"]
+
+networks:
+    app-tier:
+        external: true
