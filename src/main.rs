@@ -1,16 +1,8 @@
 use dnp3::link::LinkErrorMode;
-// src/main.rs
-// use crate::config::get_outstation_config;
-// use crate::handlers::ExampleControlHandler;
-// use crate::outstation::{ExampleOutstationApplication, ExampleOutstationInformation};
 use crate::server::run_server;
 use dnp3::tcp::*;
 
 mod config;
-// mod handlers;
-// mod outstation;
-// mod server;
-// mod time;
 mod time;
 mod handlers;
 mod server;

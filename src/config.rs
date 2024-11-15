@@ -1,5 +1,3 @@
-// src/config.rs
-// use dnp3::app::decode::*;
 use dnp3::decode::AppDecodeLevel;
 use dnp3::link::*;
 use dnp3::outstation::*;
