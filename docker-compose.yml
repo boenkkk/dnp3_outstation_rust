@@ -2,19 +2,22 @@ version: '3.8'
 
 services:
     app:
-        build: .
-        container_name: dnp3_outstation
+        container_name: dnp3_outstation_rust
+        env_file:
+            - .env
         environment:
-            - RUST_LOG=info  # Optional, configure your app's log level
+            - RUST_LOG=info
+        build:
+            context: .
+            dockerfile: Dockerfile
         volumes:
             - .:/app
         networks:
-            - app-tier
-#        ports:
-#             - "777:777"
-#        restart: always
-        command: ["dnp3_outstation"]
+            - scada-network
+        ports:
+            - "777:777"
+        # restart: always
 
 networks:
-    app-tier:
+    scada-network:
         external: true
