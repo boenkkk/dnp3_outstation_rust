@@ -18,7 +18,6 @@ pub fn run_scheduler(outstation: Arc<OutstationHandle>) {
 
     // Schedule a task to run every 1 seconds
     scheduler.every(1.seconds()).run(move || {
-        println!("Task executed at {:?}", chrono::Utc::now());
         generate_random_update(&outstation_clone);
     });
 
@@ -33,19 +32,25 @@ pub fn run_scheduler(outstation: Arc<OutstationHandle>) {
 
 pub fn generate_random_update(outstation: &OutstationHandle) {
     outstation.transaction(|db| {
-        // db.update(generate_random_int(0u32, 2u32) as u16, &OctetString::new("Hai hai".as_bytes()), UpdateOptions::detect_event());
-        if let Ok(octet_string) = OctetString::new(generate_random_string(8).as_bytes()) {
-            db.update(
-                generate_random_int(0u32, 2u32) as u16,
-                &octet_string,
-                UpdateOptions::detect_event(),
-            );
-        }
+        // declare variables
+        let flag = Flags::ONLINE;
+        let current_time = get_current_time();
+        let index = generate_random_int(0u32, 2u32) as u16;
+        let value_string = generate_random_string(8);
+        let value_float = generate_random_float(-50f64, 50f64);
+        let value_boolean = generate_random_bool();
+        let value_double_bit = generate_random_double_bit();
+        let value_int = generate_random_int(1u32, 10u32);
+        let detect_event = UpdateOptions::detect_event();
 
-        db.update(generate_random_int(0u32, 2u32) as u16, &BinaryInput::new(generate_random_bool(), Flags::ONLINE, get_current_time()), UpdateOptions::detect_event());
-        db.update(generate_random_int(0u32, 2u32) as u16, &AnalogInput::new(generate_random_float(-50f64, 50f64), Flags::ONLINE, get_current_time()), UpdateOptions::detect_event());
-        db.update(generate_random_int(0u32, 2u32) as u16, &DoubleBitBinaryInput::new(generate_random_double_bit(), Flags::ONLINE, get_current_time()), UpdateOptions::detect_event());
-        db.update(generate_random_int(0u32, 2u32) as u16, &Counter::new(generate_random_int(1u32, 10u32), Flags::ONLINE, get_current_time()), UpdateOptions::detect_event());
-        db.update(generate_random_int(0u32, 2u32) as u16, &FrozenCounter::new(generate_random_int(10u32, 20u32), Flags::ONLINE, get_current_time()), UpdateOptions::detect_event());
+        // update data
+        if let Ok(octet_string) = OctetString::new(value_string.as_bytes()) {
+            db.update(index, &octet_string, detect_event);
+        }
+        db.update(index, &AnalogInput::new(value_float, flag, current_time), detect_event);
+        db.update(index, &BinaryInput::new(value_boolean, flag, current_time), detect_event);
+        db.update(index, &DoubleBitBinaryInput::new(value_double_bit, flag, current_time), detect_event);
+        db.update(index, &Counter::new(value_int, flag, current_time), detect_event);
+        db.update(index, &FrozenCounter::new(value_int, flag, current_time), detect_event);
     });
 }
