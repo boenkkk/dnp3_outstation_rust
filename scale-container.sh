@@ -3,10 +3,10 @@
 # Base variables
 BASE_NAME="dnp3_outstation_rust"
 DOCKERFILE_PATH="."
-NUM_CONTAINERS=3
+NUM_CONTAINERS=10
 NETWORK="scada-network"
-BASE_IP_ADDR="10.11.0."
-BASE_PORT=777
+BASE_IP_ADDR="10.0.11"
+BASE_PORT=11180
 
 # Step 1: Build the Docker image
 echo "Building Docker image: $BASE_NAME"
@@ -21,7 +21,7 @@ fi
 for i in $(seq 1 $NUM_CONTAINERS); do
   CONTAINER_NAME="${BASE_NAME}_${i}"
   # Incrementing IP address
-  IP_ADDR="${BASE_IP_ADDR}.$((171 + i))"
+  IP_ADDR="${BASE_IP_ADDR}.$((180 + i))"
 
   # Incrementing port
   PORT=$((BASE_PORT + i))
@@ -33,7 +33,8 @@ for i in $(seq 1 $NUM_CONTAINERS); do
     --hostname "$CONTAINER_NAME" \
     --network "$NETWORK" \
     --ip "$IP_ADDR" \
-    -p "$PORT:$BASE_PORT" \
+    -p "$PORT:777" \
+    --env-file .env \
     "$BASE_NAME"
 
   if [ $? -ne 0 ]; then
