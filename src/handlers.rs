@@ -8,6 +8,36 @@ pub struct ExampleControlHandler;
 
 impl ControlHandler for ExampleControlHandler {}
 
+impl ExampleControlHandler {
+    fn select_analog_output(&self, index: u16) -> CommandStatus {
+        if index < 10 {
+            CommandStatus::Success
+        } else {
+            CommandStatus::NotSupported
+        }
+    }
+
+    fn operate_analog_output(
+        &self,
+        value: f64,
+        index: u16,
+        database: &mut DatabaseHandle,
+    ) -> CommandStatus {
+        if index < 10 {
+            database.transaction(|db| {
+                db.update(
+                    index,
+                    &AnalogOutputStatus::new(value, Flags::ONLINE, get_current_time()),
+                    UpdateOptions::detect_event(),
+                );
+            });
+            CommandStatus::Success
+        } else {
+            CommandStatus::NotSupported
+        }
+    }
+}
+
 impl ControlSupport<Group12Var1> for ExampleControlHandler {
     fn select(
         &mut self,
@@ -39,36 +69,6 @@ impl ControlSupport<Group12Var1> for ExampleControlHandler {
                 db.update(
                     index,
                     &BinaryOutputStatus::new(status, Flags::ONLINE, get_current_time()),
-                    UpdateOptions::detect_event(),
-                );
-            });
-            CommandStatus::Success
-        } else {
-            CommandStatus::NotSupported
-        }
-    }
-}
-
-impl ExampleControlHandler {
-    fn select_analog_output(&self, index: u16) -> CommandStatus {
-        if index < 10 {
-            CommandStatus::Success
-        } else {
-            CommandStatus::NotSupported
-        }
-    }
-
-    fn operate_analog_output(
-        &self,
-        value: f64,
-        index: u16,
-        database: &mut DatabaseHandle,
-    ) -> CommandStatus {
-        if index < 10 {
-            database.transaction(|db| {
-                db.update(
-                    index,
-                    &AnalogOutputStatus::new(value, Flags::ONLINE, get_current_time()),
                     UpdateOptions::detect_event(),
                 );
             });

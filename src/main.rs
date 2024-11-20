@@ -23,19 +23,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Load environment variables from .env file
     dotenv().ok();
 
-    // Run the TCP server
-    run_tcp_server().await?;
-
-    Ok(())
-}
-
-async fn run_tcp_server() -> Result<(), Box<dyn std::error::Error>> {
     // Get the address from the environment variable or default to "0.0.0.0:777"
     let tcp_server_address = env::var("DNP3_TCP_SERVER_ADDRESS").unwrap().to_string();
     let outstation_address = env::var("DNP3_OUTSTATION_ADDRESS")?.parse()?;
     let master_address = env::var("DNP3_MASTER_ADDRESS")?.parse()?;
 
+    // Run the TCP server
     // Parse the address and start the server
     let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_address.parse()?);
-    run_server(server, outstation_address, master_address).await
+    run_server(server, outstation_address, master_address).await?;
+
+    Ok(())
 }
