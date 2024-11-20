@@ -5,7 +5,6 @@ use dotenv::dotenv;
 use std::env;
 
 mod config;
-mod time;
 mod handlers;
 mod server;
 mod scheduler;
