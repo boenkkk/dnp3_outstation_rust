@@ -1,10 +1,22 @@
+use std::env;
 use dnp3::app::attr::{AttrProp, StringAttr};
 use dnp3::outstation::database::{Add, AnalogInputConfig, AnalogOutputStatusConfig, BinaryInputConfig, BinaryOutputStatusConfig, CounterConfig, DoubleBitBinaryInputConfig, EventAnalogInputVariation, EventBinaryInputVariation, EventClass, FrozenCounterConfig, OctetStringConfig, StaticAnalogInputVariation, StaticBinaryInputVariation};
 use dnp3::outstation::OutstationHandle;
 
 pub fn initialize_database(outstation: &OutstationHandle) {
     outstation.transaction(|db| {
-        for i in 0..3 {
+        let _ = db.define_attr(
+            AttrProp::default(),
+            StringAttr::DeviceManufacturersName.with_value("Step Function I/O"),
+        );
+        let _ = db.define_attr(
+            AttrProp::writable(),
+            StringAttr::UserAssignedLocation.with_value("Bend, OR"),
+        );
+        db.add(0, Some(EventClass::Class1), OctetStringConfig);
+
+        let dnp3_binary_input_total = env::var("DNP3_BINARY_INPUT_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_binary_input_total {
             db.add(
                 i,
                 Some(EventClass::Class1),
@@ -13,18 +25,19 @@ pub fn initialize_database(outstation: &OutstationHandle) {
                     e_var: EventBinaryInputVariation::Group2Var3,
                 },
             );
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                DoubleBitBinaryInputConfig::default(),
-            );
+        }
+
+        let dnp3_binary_output_total = env::var("DNP3_BINARY_OUTPUT_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_binary_output_total {
             db.add(
                 i,
                 Some(EventClass::Class1),
                 BinaryOutputStatusConfig::default(),
             );
-            db.add(i, Some(EventClass::Class1), CounterConfig::default());
-            db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
+        }
+
+        let dnp3_analog_input_total = env::var("DNP3_ANALOG_INPUT_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_analog_input_total {
             db.add(
                 i,
                 Some(EventClass::Class1),
@@ -34,21 +47,34 @@ pub fn initialize_database(outstation: &OutstationHandle) {
                     deadband: 0.0,
                 },
             );
+        }
+
+        let dnp3_analog_output_total = env::var("DNP3_ANALOG_OUTPUT_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_analog_output_total {
             db.add(
                 i,
                 Some(EventClass::Class1),
                 AnalogOutputStatusConfig::default(),
             );
-            db.add(i, Some(EventClass::Class1), OctetStringConfig);
         }
 
-        let _ = db.define_attr(
-            AttrProp::default(),
-            StringAttr::DeviceManufacturersName.with_value("Step Function I/O"),
-        );
-        let _ = db.define_attr(
-            AttrProp::writable(),
-            StringAttr::UserAssignedLocation.with_value("Bend, OR"),
-        );
+        let dnp3_double_bit_binary_input_total = env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_double_bit_binary_input_total {
+            db.add(
+                i,
+                Some(EventClass::Class1),
+                DoubleBitBinaryInputConfig::default(),
+            );
+        }
+
+        let dnp3_counter_total = env::var("DNP3_COUNTER_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_counter_total {
+            db.add(i, Some(EventClass::Class1), CounterConfig::default());
+        }
+
+        let dnp3_frozen_counter_total = env::var("DNP3_FROZEN_COUNTER_TOTAL").unwrap().parse::<u16>().unwrap();
+        for i in 0..dnp3_frozen_counter_total {
+            db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
+        }
     });
 }
