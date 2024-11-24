@@ -1,8 +1,9 @@
-use std::time::Duration;
 use dnp3::decode::{AppDecodeLevel, LinkDecodeLevel, PhysDecodeLevel, TransportDecodeLevel};
 use dnp3::link::*;
-use dnp3::outstation::*;
 use dnp3::outstation::database::EventBufferConfig;
+use dnp3::outstation::*;
+use std::env;
+use std::time::Duration;
 
 pub fn get_outstation_config(outstation_address: u16, master_address: u16) -> OutstationConfig {
     let mut config = OutstationConfig::new(
@@ -20,15 +21,38 @@ pub fn get_outstation_config(outstation_address: u16, master_address: u16) -> Ou
 }
 
 pub fn get_event_buffer_config() -> EventBufferConfig {
-    let max_event_buffer = 10;
     EventBufferConfig::new(
-        max_event_buffer, // binary
-        max_event_buffer, // double-bit binary
-        max_event_buffer, // binary output status
-        max_event_buffer,  // counter
-        max_event_buffer,  // frozen counter
-        max_event_buffer,  // analog
-        max_event_buffer,  // analog output status
-        max_event_buffer,  // octet string
+        env::var("DNP3_BINARY_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // BINARY
+        env::var("DNP3_DOUBLE_BIT_BINARY_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // DOUBLE_BIT_BINARY
+        env::var("DNP3_BINARY_OUTPUT_STATUS_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // BINARY_OUTPUT_STATUS
+        env::var("DNP3_COUNTER_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // COUNTER
+        env::var("DNP3_FROZEN_COUNTER_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // FROZEN_COUNTER
+        env::var("DNP3_ANALOG_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // ANALOG
+        env::var("DNP3_ANALOG_OUTPUT_STATUS_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // ANALOG_OUTPUT_STATUS
+        env::var("DNP3_OCTET_STRING_MAX_EVENT_BUFFER")
+            .unwrap()
+            .parse()
+            .unwrap(), // OCTET_STRING
     )
 }
