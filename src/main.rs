@@ -4,12 +4,15 @@ use dnp3::tcp::*;
 use dotenv::dotenv;
 use std::env;
 
-mod config;
 #[path = "handler/control_handlers.rs"]
 mod control_handlers;
 mod database;
+#[path = "config/event_buffer.rs"]
+mod event_buffer;
 #[path = "handler/outstation_application.rs"]
 mod outstation_application;
+#[path = "config/outstation_config.rs"]
+mod outstation_config;
 #[path = "handler/outstation_information.rs"]
 mod outstation_information;
 mod scheduler;

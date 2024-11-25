@@ -4,10 +4,10 @@ use dnp3::app::NullListener;
 use dnp3::outstation::OutstationHandle;
 use dnp3::tcp::*;
 
-use crate::config::get_outstation_config;
 use crate::control_handlers::ExampleControlHandler;
 use crate::database::initialize_database;
 use crate::outstation_application::ExampleOutstationApplication;
+use crate::outstation_config::get_outstation_config;
 use crate::outstation_information::ExampleOutstationInformation;
 use crate::scheduler::run_scheduler;
 
