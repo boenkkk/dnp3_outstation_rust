@@ -1,9 +1,6 @@
-use dnp3::app::attr::{Attribute};
-use dnp3::app::{MaybeAsync};
-use dnp3::outstation::*;
-
-pub struct ExampleOutstationInformation;
-impl OutstationInformation for ExampleOutstationInformation {}
+use dnp3::app::attr::Attribute;
+use dnp3::app::MaybeAsync;
+use dnp3::outstation::OutstationApplication;
 
 pub struct ExampleOutstationApplication;
 impl OutstationApplication for ExampleOutstationApplication {

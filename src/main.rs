@@ -1,16 +1,19 @@
-use dnp3::link::LinkErrorMode;
 use crate::server::run_server;
+use dnp3::link::LinkErrorMode;
 use dnp3::tcp::*;
 use dotenv::dotenv;
 use std::env;
 
 mod config;
-mod handlers;
-mod server;
-mod scheduler;
-mod util;
 mod database;
-mod outstation;
+mod handlers;
+#[path = "handler/outstation_application.rs"]
+mod outstation_application;
+#[path = "handler/outstation_information.rs"]
+mod outstation_information;
+mod scheduler;
+mod server;
+mod util;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
