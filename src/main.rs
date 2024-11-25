@@ -8,7 +8,8 @@ use std::env;
 mod common_util;
 #[path = "handler/control_handlers.rs"]
 mod control_handlers;
-mod database;
+#[path = "datapoint/datapoint_initial.rs"]
+mod datapoint_initial;
 #[path = "util/dnp3_util.rs"]
 mod dnp3_util;
 #[path = "config/event_buffer.rs"]

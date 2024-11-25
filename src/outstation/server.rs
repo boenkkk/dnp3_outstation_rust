@@ -2,7 +2,7 @@ use dnp3::app::NullListener;
 use dnp3::tcp::*;
 
 use crate::control_handlers::ExampleControlHandler;
-use crate::database::initialize_database;
+use crate::datapoint_initial::initialize_database;
 use crate::outstation::run_outstation;
 use crate::outstation_application::ExampleOutstationApplication;
 use crate::outstation_config::get_outstation_config;
