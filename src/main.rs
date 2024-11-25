@@ -4,9 +4,13 @@ use dnp3::tcp::*;
 use dotenv::dotenv;
 use std::env;
 
+#[path = "util/common_util.rs"]
+mod common_util;
 #[path = "handler/control_handlers.rs"]
 mod control_handlers;
 mod database;
+#[path = "util/dnp3_util.rs"]
+mod dnp3_util;
 #[path = "config/event_buffer.rs"]
 mod event_buffer;
 #[path = "handler/outstation_application.rs"]
@@ -17,7 +21,6 @@ mod outstation_config;
 mod outstation_information;
 mod scheduler;
 mod server;
-mod util;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

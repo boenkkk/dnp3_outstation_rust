@@ -1,4 +1,4 @@
-use crate::util::get_current_time;
+use crate::dnp3_util::get_current_time;
 use dnp3::app::control::*;
 use dnp3::app::measurement::*;
 use dnp3::outstation::database::*;
