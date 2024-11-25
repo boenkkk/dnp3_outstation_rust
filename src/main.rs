@@ -13,6 +13,8 @@ mod database;
 mod dnp3_util;
 #[path = "config/event_buffer.rs"]
 mod event_buffer;
+#[path = "outstation/outstation.rs"]
+mod outstation;
 #[path = "handler/outstation_application.rs"]
 mod outstation_application;
 #[path = "config/outstation_config.rs"]
@@ -20,6 +22,7 @@ mod outstation_config;
 #[path = "handler/outstation_information.rs"]
 mod outstation_information;
 mod scheduler;
+#[path = "outstation/server.rs"]
 mod server;
 
 #[tokio::main(flavor = "multi_thread")]
