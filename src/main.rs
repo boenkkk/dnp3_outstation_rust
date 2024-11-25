@@ -5,8 +5,9 @@ use dotenv::dotenv;
 use std::env;
 
 mod config;
+#[path = "handler/control_handlers.rs"]
+mod control_handlers;
 mod database;
-mod handlers;
 #[path = "handler/outstation_application.rs"]
 mod outstation_application;
 #[path = "handler/outstation_information.rs"]
