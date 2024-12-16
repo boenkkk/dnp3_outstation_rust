@@ -48,30 +48,33 @@ fn initial_binary_input(db: &mut Database) {
         .unwrap()
         .parse::<u16>()
         .unwrap();
-    let dnp3_binary_input_init_value: Vec<bool> =
-        serde_json::from_str(env::var("DNP3_BINARY_INPUT_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
-    for i in 0..dnp3_binary_input_total {
-        let i_usize: usize = i as usize;
 
-        db.add(
-            i,
-            Some(EventClass::Class1),
-            BinaryInputConfig {
-                s_var: StaticBinaryInputVariation::Group1Var2,
-                e_var: EventBinaryInputVariation::Group2Var3,
-            },
-        );
+    if dnp3_binary_input_total > 0 {
+        let dnp3_binary_input_init_value: Vec<bool> =
+            serde_json::from_str(env::var("DNP3_BINARY_INPUT_INIT_VALUE").unwrap().as_str())
+                .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
+        for i in 0..dnp3_binary_input_total {
+            let i_usize: usize = i as usize;
 
-        db.update(
-            i,
-            &BinaryInput::new(
-                *dnp3_binary_input_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
+            db.add(
+                i,
+                Some(EventClass::Class1),
+                BinaryInputConfig {
+                    s_var: StaticBinaryInputVariation::Group1Var2,
+                    e_var: EventBinaryInputVariation::Group2Var3,
+                },
+            );
+
+            db.update(
+                i,
+                &BinaryInput::new(
+                    *dnp3_binary_input_init_value.index(i_usize),
+                    Flags::ONLINE,
+                    get_current_time(),
+                ),
+                UpdateOptions::detect_event(),
+            );
+        }
     }
 }
 
@@ -80,27 +83,30 @@ fn initial_binary_output(db: &mut Database) {
         .unwrap()
         .parse::<u16>()
         .unwrap();
-    let dnp3_binary_output_init_value: Vec<bool> =
-        serde_json::from_str(env::var("DNP3_BINARY_OUTPUT_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
-    for i in 0..dnp3_binary_output_total {
-        let i_usize: usize = i as usize;
 
-        db.add(
-            i,
-            Some(EventClass::Class1),
-            BinaryOutputStatusConfig::default(),
-        );
+    if dnp3_binary_output_total > 0 {
+        let dnp3_binary_output_init_value: Vec<bool> =
+            serde_json::from_str(env::var("DNP3_BINARY_OUTPUT_INIT_VALUE").unwrap().as_str())
+                .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
+        for i in 0..dnp3_binary_output_total {
+            let i_usize: usize = i as usize;
 
-        db.update(
-            i,
-            &BinaryOutputStatus::new(
-                *dnp3_binary_output_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
+            db.add(
+                i,
+                Some(EventClass::Class1),
+                BinaryOutputStatusConfig::default(),
+            );
+
+            db.update(
+                i,
+                &BinaryOutputStatus::new(
+                    *dnp3_binary_output_init_value.index(i_usize),
+                    Flags::ONLINE,
+                    get_current_time(),
+                ),
+                UpdateOptions::detect_event(),
+            );
+        }
     }
 }
 
@@ -109,29 +115,32 @@ fn initial_double_bit_binary_input(db: &mut Database) {
         .unwrap()
         .parse::<u16>()
         .unwrap();
-    let dnp3_double_bit_binary_input_init_value: Vec<u8> = serde_json::from_str(
-        env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_INIT_VALUE")
-            .unwrap()
-            .as_str(),
-    )
-    .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
-    for i in 0..dnp3_double_bit_binary_input_total {
-        let i_usize: usize = i as usize;
-        db.add(
-            i,
-            Some(EventClass::Class1),
-            DoubleBitBinaryInputConfig::default(),
-        );
 
-        db.update(
-            i,
-            &DoubleBitBinaryInput::new(
-                get_double_bit(dnp3_double_bit_binary_input_init_value.index(i_usize)),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
+    if dnp3_double_bit_binary_input_total > 0 {
+        let dnp3_double_bit_binary_input_init_value: Vec<u8> = serde_json::from_str(
+            env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_INIT_VALUE")
+                .unwrap()
+                .as_str(),
+        )
+        .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
+        for i in 0..dnp3_double_bit_binary_input_total {
+            let i_usize: usize = i as usize;
+            db.add(
+                i,
+                Some(EventClass::Class1),
+                DoubleBitBinaryInputConfig::default(),
+            );
+
+            db.update(
+                i,
+                &DoubleBitBinaryInput::new(
+                    get_double_bit(dnp3_double_bit_binary_input_init_value.index(i_usize)),
+                    Flags::ONLINE,
+                    get_current_time(),
+                ),
+                UpdateOptions::detect_event(),
+            );
+        }
     }
 }
 
@@ -140,23 +149,26 @@ fn initial_counter(db: &mut Database) {
         .unwrap()
         .parse::<u16>()
         .unwrap();
-    let dnp3_counter_init_value: Vec<u32> =
-        serde_json::from_str(env::var("DNP3_COUNTER_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_COUNTER_INIT_VALUE");
-    for i in 0..dnp3_counter_total {
-        let i_usize: usize = i as usize;
 
-        db.add(i, Some(EventClass::Class1), CounterConfig::default());
+    if dnp3_counter_total > 0 {
+        let dnp3_counter_init_value: Vec<u32> =
+            serde_json::from_str(env::var("DNP3_COUNTER_INIT_VALUE").unwrap().as_str())
+                .expect("Failed to parse DNP3_COUNTER_INIT_VALUE");
+        for i in 0..dnp3_counter_total {
+            let i_usize: usize = i as usize;
 
-        db.update(
-            i,
-            &Counter::new(
-                *dnp3_counter_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
+            db.add(i, Some(EventClass::Class1), CounterConfig::default());
+
+            db.update(
+                i,
+                &Counter::new(
+                    *dnp3_counter_init_value.index(i_usize),
+                    Flags::ONLINE,
+                    get_current_time(),
+                ),
+                UpdateOptions::detect_event(),
+            );
+        }
     }
 }
 
@@ -165,22 +177,25 @@ fn initial_frozen_counter(db: &mut Database) {
         .unwrap()
         .parse::<u16>()
         .unwrap();
-    let dnp3_frozen_counter_init_value: Vec<u32> =
-        serde_json::from_str(env::var("DNP3_FROZEN_COUNTER_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_FROZEN_COUNTER_INIT_VALUE");
-    for i in 0..dnp3_frozen_counter_total {
-        let i_usize: usize = i as usize;
 
-        db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
+    if dnp3_frozen_counter_total > 0 {
+        let dnp3_frozen_counter_init_value: Vec<u32> =
+            serde_json::from_str(env::var("DNP3_FROZEN_COUNTER_INIT_VALUE").unwrap().as_str())
+                .expect("Failed to parse DNP3_FROZEN_COUNTER_INIT_VALUE");
+        for i in 0..dnp3_frozen_counter_total {
+            let i_usize: usize = i as usize;
 
-        db.update(
-            i,
-            &FrozenCounter::new(
-                *dnp3_frozen_counter_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
+            db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
+
+            db.update(
+                i,
+                &FrozenCounter::new(
+                    *dnp3_frozen_counter_init_value.index(i_usize),
+                    Flags::ONLINE,
+                    get_current_time(),
+                ),
+                UpdateOptions::detect_event(),
+            );
+        }
     }
 }
