@@ -13,7 +13,8 @@ services:
         volumes:
             - .:/app
         networks:
-            - scada-network
+            scada-network:
+                ipv4_address: 10.0.11.77
         ports:
             - "777:777"
         # restart: always
