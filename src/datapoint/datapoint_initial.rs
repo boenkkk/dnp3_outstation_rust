@@ -1,15 +1,21 @@
+#[path = "analog_input.rs"]
+mod analog_input;
+#[path = "analog_output.rs"]
+mod analog_output;
+
+use analog_input::initial_analog_input;
+use analog_output::initial_analog_output;
+
 use crate::common_util::get_double_bit;
 use crate::dnp3_util::get_current_time;
 use dnp3::app::attr::{AttrProp, StringAttr};
 use dnp3::app::measurement::{
-    AnalogInput, AnalogOutputStatus, BinaryInput, BinaryOutputStatus, Counter,
-    DoubleBitBinaryInput, Flags, FrozenCounter,
+    BinaryInput, BinaryOutputStatus, Counter, DoubleBitBinaryInput, Flags, FrozenCounter,
 };
 use dnp3::outstation::database::{
-    Add, AnalogInputConfig, AnalogOutputStatusConfig, BinaryInputConfig, BinaryOutputStatusConfig,
-    CounterConfig, Database, DoubleBitBinaryInputConfig, EventAnalogInputVariation,
-    EventBinaryInputVariation, EventClass, FrozenCounterConfig, OctetStringConfig,
-    StaticAnalogInputVariation, StaticBinaryInputVariation, Update, UpdateOptions,
+    Add, BinaryInputConfig, BinaryOutputStatusConfig, CounterConfig, Database,
+    DoubleBitBinaryInputConfig, EventBinaryInputVariation, EventClass, FrozenCounterConfig,
+    OctetStringConfig, StaticBinaryInputVariation, Update, UpdateOptions,
 };
 use dnp3::outstation::OutstationHandle;
 use std::env;
@@ -90,68 +96,6 @@ fn initial_binary_output(db: &mut Database) {
             i,
             &BinaryOutputStatus::new(
                 *dnp3_binary_output_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
-    }
-}
-
-fn initial_analog_input(db: &mut Database) {
-    let dnp3_analog_input_total = env::var("DNP3_ANALOG_INPUT_TOTAL")
-        .unwrap()
-        .parse::<u16>()
-        .unwrap();
-    let dnp3_analog_input_init_value: Vec<f64> =
-        serde_json::from_str(env::var("DNP3_ANALOG_INPUT_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_ANALOG_INPUT_INIT_VALUE");
-    for i in 0..dnp3_analog_input_total {
-        let i_usize: usize = i as usize;
-
-        db.add(
-            i,
-            Some(EventClass::Class1),
-            AnalogInputConfig {
-                s_var: StaticAnalogInputVariation::Group30Var4,
-                e_var: EventAnalogInputVariation::Group32Var2,
-                deadband: 0.0,
-            },
-        );
-
-        db.update(
-            i,
-            &AnalogInput::new(
-                *dnp3_analog_input_init_value.index(i_usize),
-                Flags::ONLINE,
-                get_current_time(),
-            ),
-            UpdateOptions::detect_event(),
-        );
-    }
-}
-
-fn initial_analog_output(db: &mut Database) {
-    let dnp3_analog_output_total = env::var("DNP3_ANALOG_OUTPUT_TOTAL")
-        .unwrap()
-        .parse::<u16>()
-        .unwrap();
-    let dnp3_analog_output_init_value: Vec<f64> =
-        serde_json::from_str(env::var("DNP3_ANALOG_OUTPUT_INIT_VALUE").unwrap().as_str())
-            .expect("Failed to parse DNP3_ANALOG_INPUT_INIT_VALUE");
-    for i in 0..dnp3_analog_output_total {
-        let i_usize: usize = i as usize;
-
-        db.add(
-            i,
-            Some(EventClass::Class1),
-            AnalogOutputStatusConfig::default(),
-        );
-
-        db.update(
-            i,
-            &AnalogOutputStatus::new(
-                *dnp3_analog_output_init_value.index(i_usize),
                 Flags::ONLINE,
                 get_current_time(),
             ),
