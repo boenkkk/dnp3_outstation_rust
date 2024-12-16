@@ -24,8 +24,8 @@ pub fn initial_analog_input(db: &mut Database) {
                 i,
                 Some(EventClass::Class1),
                 AnalogInputConfig {
-                    s_var: StaticAnalogInputVariation::Group30Var4,
-                    e_var: EventAnalogInputVariation::Group32Var2,
+                    s_var: StaticAnalogInputVariation::Group30Var5,
+                    e_var: EventAnalogInputVariation::Group32Var7,
                     deadband: 0.0,
                 },
             );
