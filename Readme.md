@@ -64,3 +64,7 @@ example:
 ## Acknowledgments
 
 - [README-Template.md](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+
+## References
+
+- [Serial Over TCP](https://chatgpt.com/share/677cb416-8d68-8008-8b97-06ae07531183)
