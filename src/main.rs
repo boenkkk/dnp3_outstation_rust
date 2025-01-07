@@ -1,3 +1,4 @@
+use crate::serial::run_serial;
 use crate::tcp::run_tcp;
 use dnp3::link::LinkErrorMode;
 use dnp3::tcp::*;
@@ -23,6 +24,8 @@ mod outstation_config;
 #[path = "handler/outstation_information.rs"]
 mod outstation_information;
 mod scheduler;
+#[path = "outstation/serial.rs"]
+mod serial;
 #[path = "outstation/tcp.rs"]
 mod tcp;
 
@@ -37,14 +40,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
     // Get the address from the environment variable or default to "0.0.0.0:777"
-    let tcp_server_address = env::var("DNP3_TCP_SERVER_ADDRESS").unwrap().to_string();
+    let dnp3_outstation_type = env::var("DNP3_OUTSTATION_TYPE").unwrap().to_string();
     let outstation_address = env::var("DNP3_OUTSTATION_ADDRESS")?.parse()?;
     let master_address = env::var("DNP3_MASTER_ADDRESS")?.parse()?;
 
-    // Run the TCP server
-    // Parse the address and start the server
-    let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_address.parse()?);
-    run_tcp(server, outstation_address, master_address).await?;
+    if dnp3_outstation_type == "TCP" {
+        let tcp_server_address = env::var("DNP3_TCP_SERVER_ADDRESS").unwrap().to_string();
+
+        // Run the TCP server
+        // Parse the address and start the server
+        let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_address.parse()?);
+        run_tcp(server, outstation_address, master_address).await?;
+    } else if dnp3_outstation_type == "SERIAL" {
+        let dnp3_serial_port = env::var("DNP3_SERIAL_PORT").unwrap().to_string();
+        run_serial(dnp3_serial_port, outstation_address, master_address).await?;
+    }
 
     Ok(())
 }
