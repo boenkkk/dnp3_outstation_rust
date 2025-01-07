@@ -1,4 +1,4 @@
-use crate::server::run_server;
+use crate::tcp::run_tcp;
 use dnp3::link::LinkErrorMode;
 use dnp3::tcp::*;
 use dotenv::dotenv;
@@ -23,8 +23,8 @@ mod outstation_config;
 #[path = "handler/outstation_information.rs"]
 mod outstation_information;
 mod scheduler;
-#[path = "outstation/server.rs"]
-mod server;
+#[path = "outstation/tcp.rs"]
+mod tcp;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Run the TCP server
     // Parse the address and start the server
     let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_address.parse()?);
-    run_server(server, outstation_address, master_address).await?;
+    run_tcp(server, outstation_address, master_address).await?;
 
     Ok(())
 }
