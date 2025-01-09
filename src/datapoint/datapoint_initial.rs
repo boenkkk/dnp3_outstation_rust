@@ -7,18 +7,21 @@ mod binary_input;
 #[path = "binary_output.rs"]
 mod binary_output;
 
+#[path = "double_bit_binary_input.rs"]
+mod double_bit_binary_input;
+
 use analog_input::initial_analog_input;
 use analog_output::initial_analog_output;
 use binary_input::initial_binary_input;
 use binary_output::initial_binary_output;
+use double_bit_binary_input::initial_double_bit_binary_input;
 
-use crate::common_util::get_double_bit;
 use crate::dnp3_util::get_current_time;
 use dnp3::app::attr::{AttrProp, StringAttr};
-use dnp3::app::measurement::{Counter, DoubleBitBinaryInput, Flags, FrozenCounter};
+use dnp3::app::measurement::{Counter, Flags, FrozenCounter};
 use dnp3::outstation::database::{
-    Add, CounterConfig, Database, DoubleBitBinaryInputConfig, EventClass, FrozenCounterConfig,
-    OctetStringConfig, Update, UpdateOptions,
+    Add, CounterConfig, Database, EventClass, FrozenCounterConfig, OctetStringConfig, Update,
+    UpdateOptions,
 };
 use dnp3::outstation::OutstationHandle;
 use std::env;
@@ -44,40 +47,6 @@ pub fn initialize_database(outstation: &OutstationHandle) {
         initial_counter(db);
         initial_frozen_counter(db);
     });
-}
-
-fn initial_double_bit_binary_input(db: &mut Database) {
-    let dnp3_double_bit_binary_input_total = env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_TOTAL")
-        .unwrap()
-        .parse::<u16>()
-        .unwrap();
-
-    if dnp3_double_bit_binary_input_total > 0 {
-        let dnp3_double_bit_binary_input_init_value: Vec<u8> = serde_json::from_str(
-            env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_INIT_VALUE")
-                .unwrap()
-                .as_str(),
-        )
-        .expect("Failed to parse DNP3_BINARY_INPUT_INIT_VALUE");
-        for i in 0..dnp3_double_bit_binary_input_total {
-            let i_usize: usize = i as usize;
-            db.add(
-                i,
-                Some(EventClass::Class1),
-                DoubleBitBinaryInputConfig::default(),
-            );
-
-            db.update(
-                i,
-                &DoubleBitBinaryInput::new(
-                    get_double_bit(dnp3_double_bit_binary_input_init_value.index(i_usize)),
-                    Flags::ONLINE,
-                    get_current_time(),
-                ),
-                UpdateOptions::detect_event(),
-            );
-        }
-    }
 }
 
 fn initial_counter(db: &mut Database) {
