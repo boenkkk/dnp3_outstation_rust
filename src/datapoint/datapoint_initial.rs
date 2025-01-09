@@ -10,6 +10,8 @@ mod binary_output;
 mod counter;
 #[path = "double_bit_binary_input.rs"]
 mod double_bit_binary_input;
+#[path = "frozen_counter.rs"]
+mod frozen_counter;
 
 use analog_input::initial_analog_input;
 use analog_output::initial_analog_output;
@@ -17,15 +19,11 @@ use binary_input::initial_binary_input;
 use binary_output::initial_binary_output;
 use counter::initial_counter;
 use double_bit_binary_input::initial_double_bit_binary_input;
+use frozen_counter::initial_frozen_counter;
 
-use crate::dnp3_util::get_current_time;
 use dnp3::app::attr::{AttrProp, StringAttr};
-use dnp3::app::measurement::{Flags, FrozenCounter};
-use dnp3::outstation::database::{
-    Add, Database, EventClass, FrozenCounterConfig, OctetStringConfig, Update, UpdateOptions,
-};
+use dnp3::outstation::database::{Add, EventClass, OctetStringConfig, Update};
 use dnp3::outstation::OutstationHandle;
-use std::env;
 use std::ops::Index;
 
 pub fn initialize_database(outstation: &OutstationHandle) {
@@ -48,32 +46,4 @@ pub fn initialize_database(outstation: &OutstationHandle) {
         initial_counter(db);
         initial_frozen_counter(db);
     });
-}
-
-fn initial_frozen_counter(db: &mut Database) {
-    let dnp3_frozen_counter_total = env::var("DNP3_FROZEN_COUNTER_TOTAL")
-        .unwrap()
-        .parse::<u16>()
-        .unwrap();
-
-    if dnp3_frozen_counter_total > 0 {
-        let dnp3_frozen_counter_init_value: Vec<u32> =
-            serde_json::from_str(env::var("DNP3_FROZEN_COUNTER_INIT_VALUE").unwrap().as_str())
-                .expect("Failed to parse DNP3_FROZEN_COUNTER_INIT_VALUE");
-        for i in 0..dnp3_frozen_counter_total {
-            let i_usize: usize = i as usize;
-
-            db.add(i, Some(EventClass::Class1), FrozenCounterConfig::default());
-
-            db.update(
-                i,
-                &FrozenCounter::new(
-                    *dnp3_frozen_counter_init_value.index(i_usize),
-                    Flags::ONLINE,
-                    get_current_time(),
-                ),
-                UpdateOptions::detect_event(),
-            );
-        }
-    }
 }
