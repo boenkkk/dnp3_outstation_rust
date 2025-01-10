@@ -22,9 +22,8 @@ use double_bit_binary_input::initial_double_bit_binary_input;
 use frozen_counter::initial_frozen_counter;
 
 use dnp3::app::attr::{AttrProp, StringAttr};
-use dnp3::outstation::database::{Add, EventClass, OctetStringConfig, Update};
+use dnp3::outstation::database::{Add, EventClass, OctetStringConfig};
 use dnp3::outstation::OutstationHandle;
-use std::ops::Index;
 
 pub fn initialize_database(outstation: &OutstationHandle) {
     outstation.transaction(|db| {
