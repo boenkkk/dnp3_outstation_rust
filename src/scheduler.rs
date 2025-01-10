@@ -45,7 +45,6 @@ pub fn generate_random_update(outstation: &OutstationHandle) {
 }
 
 fn update_binary_input_value(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_binary_input_random_update_interval =
         env::var("DNP3_BINARY_INPUT_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -53,12 +52,27 @@ fn update_binary_input_value(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_binary_input_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_binary_input_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_binary_input_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_binary_input_total = env::var("DNP3_BINARY_INPUT_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -89,7 +103,6 @@ fn update_binary_input_value(db: &mut Database) {
 }
 
 fn update_binary_output_value(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_binary_output_random_update_interval =
         env::var("DNP3_BINARY_OUTPUT_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -97,12 +110,27 @@ fn update_binary_output_value(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_binary_output_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_binary_output_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_binary_output_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_binary_output_total = env::var("DNP3_BINARY_OUTPUT_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -133,7 +161,6 @@ fn update_binary_output_value(db: &mut Database) {
 }
 
 fn update_analog_input_value(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_analog_input_random_update_interval =
         env::var("DNP3_ANALOG_INPUT_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -141,12 +168,27 @@ fn update_analog_input_value(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_analog_input_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_analog_input_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_analog_input_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_analog_input_total = env::var("DNP3_ANALOG_INPUT_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -190,7 +232,6 @@ fn update_analog_input_value(db: &mut Database) {
 }
 
 fn update_analog_output_value(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_analog_output_random_update_interval =
         env::var("DNP3_ANALOG_OUTPUT_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -198,12 +239,27 @@ fn update_analog_output_value(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_analog_output_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_analog_output_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_analog_output_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_analog_output_total = env::var("DNP3_ANALOG_OUTPUT_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -248,7 +304,6 @@ fn update_analog_output_value(db: &mut Database) {
 }
 
 fn update_double_bit_binary_input(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_double_bit_binary_input_random_update_interval =
         env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -256,12 +311,27 @@ fn update_double_bit_binary_input(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_double_bit_binary_input_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_double_bit_binary_input_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_double_bit_binary_input_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_double_bit_binary_input_total = env::var("DNP3_DOUBLE_BIT_BINARY_INPUT_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -296,19 +366,33 @@ fn update_double_bit_binary_input(db: &mut Database) {
 }
 
 fn update_counter(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_counter_random_update_interval = env::var("DNP3_COUNTER_RANDOM_UPDATE_INTERVAL")
         .unwrap()
         .parse::<u64>()
         .unwrap_or(0);
 
     if dnp3_counter_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_counter_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_counter_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_counter_total = env::var("DNP3_COUNTER_TOTAL")
                 .unwrap()
                 .parse::<u16>()
@@ -347,7 +431,6 @@ fn update_counter(db: &mut Database) {
 }
 
 fn update_frozen_counter(db: &mut Database) {
-    let mut last_run = Instant::now();
     let dnp3_frozen_counter_random_update_interval =
         env::var("DNP3_FROZEN_COUNTER_RANDOM_UPDATE_INTERVAL")
             .unwrap()
@@ -355,12 +438,27 @@ fn update_frozen_counter(db: &mut Database) {
             .unwrap_or(0);
 
     if dnp3_frozen_counter_random_update_interval > 0 {
-        let now = Instant::now();
-        if now.duration_since(last_run)
-            >= Duration::from_millis(dnp3_frozen_counter_random_update_interval)
-        {
-            last_run = now;
+        static mut LAST_RUN: Option<Instant> = None;
 
+        // Safely update and access LAST_RUN
+        let now = Instant::now();
+        let should_run = unsafe {
+            if let Some(last_run) = LAST_RUN {
+                if now.duration_since(last_run)
+                    >= Duration::from_millis(dnp3_frozen_counter_random_update_interval)
+                {
+                    LAST_RUN = Some(now);
+                    true
+                } else {
+                    false
+                }
+            } else {
+                LAST_RUN = Some(now);
+                true
+            }
+        };
+
+        if should_run {
             let dnp3_frozen_counter_total = env::var("DNP3_FROZEN_COUNTER_TOTAL")
                 .unwrap()
                 .parse::<u16>()
