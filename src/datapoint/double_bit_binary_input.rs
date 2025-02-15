@@ -1,4 +1,4 @@
-use crate::common_util::{generate_random_double_bit, generate_random_int, get_double_bit};
+use crate::common_util::{generate_random_double_bit, get_double_bit};
 use crate::dnp3_util::get_current_time;
 use dnp3::app::measurement::{DoubleBitBinaryInput, Flags};
 use dnp3::outstation::database::{
@@ -86,19 +86,19 @@ pub fn update_double_bit_binary_input(db: &mut Database) {
                     );
 
                 if is_random_update {
-                    let double_bit_binary_input_index =
-                        generate_random_int(0u32, dnp3_double_bit_binary_input_total as u32 - 1)
-                            as u16;
+                    for double_bit_binary_input_index in 0..dnp3_double_bit_binary_input_total {
+                        let update_value = generate_random_double_bit();
 
-                    db.update(
-                        double_bit_binary_input_index,
-                        &DoubleBitBinaryInput::new(
-                            generate_random_double_bit(),
-                            Flags::ONLINE,
-                            get_current_time(),
-                        ),
-                        UpdateOptions::detect_event(),
-                    );
+                        db.update(
+                            double_bit_binary_input_index,
+                            &DoubleBitBinaryInput::new(
+                                update_value,
+                                Flags::ONLINE,
+                                get_current_time(),
+                            ),
+                            UpdateOptions::detect_event(),
+                        );
+                    }
                 }
             }
         }

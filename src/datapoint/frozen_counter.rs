@@ -78,28 +78,26 @@ pub fn update_frozen_counter(db: &mut Database) {
                     .expect("Failed to parse DNP3_FROZEN_COUNTER_RANDOM_UPDATE as a boolean");
 
                 if is_random_update {
-                    let frozen_counter_index =
-                        generate_random_int(0u32, dnp3_frozen_counter_total as u32 - 1) as u16;
+                    for frozen_counter_index in 0..dnp3_frozen_counter_total {
+                        let dnp3_frozen_counter_value: Vec<Vec<u32>> = serde_json::from_str(
+                            env::var("DNP3_FROZEN_COUNTER_RANGE").unwrap().as_str(),
+                        )
+                        .expect("Failed to parse DNP3_FROZEN_COUNTER_RANGE");
 
-                    let dnp3_frozen_counter_value: Vec<Vec<u32>> = serde_json::from_str(
-                        env::var("DNP3_FROZEN_COUNTER_RANGE").unwrap().as_str(),
-                    )
-                    .expect("Failed to parse DNP3_FROZEN_COUNTER_RANGE");
+                        let dnp3_frozen_counter_low =
+                            dnp3_frozen_counter_value[frozen_counter_index as usize][0];
+                        let dnp3_frozen_counter_high =
+                            dnp3_frozen_counter_value[frozen_counter_index as usize][1];
 
-                    let dnp3_frozen_counter_low =
-                        dnp3_frozen_counter_value[frozen_counter_index as usize][0];
-                    let dnp3_frozen_counter_high =
-                        dnp3_frozen_counter_value[frozen_counter_index as usize][1];
+                        let update_value =
+                            generate_random_int(dnp3_frozen_counter_low, dnp3_frozen_counter_high);
 
-                    db.update(
-                        frozen_counter_index,
-                        &FrozenCounter::new(
-                            generate_random_int(dnp3_frozen_counter_low, dnp3_frozen_counter_high),
-                            Flags::ONLINE,
-                            get_current_time(),
-                        ),
-                        UpdateOptions::detect_event(),
-                    );
+                        db.update(
+                            frozen_counter_index,
+                            &FrozenCounter::new(update_value, Flags::ONLINE, get_current_time()),
+                            UpdateOptions::detect_event(),
+                        );
+                    }
                 }
             }
         }

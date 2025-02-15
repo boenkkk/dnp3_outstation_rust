@@ -1,4 +1,4 @@
-use crate::common_util::{generate_random_bool, generate_random_int};
+use crate::common_util::generate_random_bool;
 use crate::dnp3_util::get_current_time;
 use dnp3::app::measurement::{BinaryOutputStatus, Flags};
 use dnp3::outstation::database::{
@@ -82,17 +82,20 @@ pub fn update_binary_output_value(db: &mut Database) {
                     .expect("Failed to parse DNP3_BINARY_OUTPUT_RANDOM_UPDATE as a boolean");
 
                 if is_random_update {
-                    let binary_output_index =
-                        generate_random_int(0u32, dnp3_binary_output_total as u32 - 1) as u16;
-                    db.update(
-                        binary_output_index,
-                        &BinaryOutputStatus::new(
-                            generate_random_bool(),
-                            Flags::ONLINE,
-                            get_current_time(),
-                        ),
-                        UpdateOptions::detect_event(),
-                    );
+                    // Update all binary output indices
+                    for index in 0..dnp3_binary_output_total {
+                        let update_value = generate_random_bool();
+
+                        db.update(
+                            index,
+                            &BinaryOutputStatus::new(
+                                update_value,
+                                Flags::ONLINE,
+                                get_current_time(),
+                            ),
+                            UpdateOptions::detect_event(),
+                        );
+                    }
                 }
             }
         }
