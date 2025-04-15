@@ -8,7 +8,8 @@ APP_NAME="dnp3-outstation"
 DOCKERFILE="Dockerfile"
 REGISTRY_PATH="1.2.3.4/scada"
 NAMESPACE="scada-grita"
-DEPLOY_FILE="k8s-config.yaml"
+DEPLOY_FILE="k8s-deploy.yaml"
+CONFIG_FILE="k8s-config.yaml"
 FULL_IMAGE_NAME="$REGISTRY_PATH/$APP_NAME"
 
 ### DOCKER BUILD
@@ -39,11 +40,11 @@ docker push $FULL_IMAGE_NAME || { echo "Docker push failed!"; exit 1; }
 ### KUBERNETES DEPLOYMENT
 # Delete the existing deployment
 echo "Deleting existing deployment..."
-kubectl delete -f $DEPLOY_FILE --ignore-not-found
+kubectl delete -f $DEPLOY_FILE -f $CONFIG_FILE --ignore-not-found
 
 # Apply the Kubernetes deployment
 echo "Applying Kubernetes deployment..."
-kubectl apply -f $DEPLOY_FILE || { echo "Kubernetes deployment failed!"; exit 1; }
+kubectl apply -f $DEPLOY_FILE -f $CONFIG_FILE || { echo "Kubernetes deployment failed!"; exit 1; }
 
 # Display deployed resources
 echo "Deployed Resources status:"
