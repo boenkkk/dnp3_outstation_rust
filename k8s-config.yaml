@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: dnp3-outstation-deployment
+    namespace: scada-grita
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: outstation
+    template:
+        metadata:
+            labels:
+                app: outstation
+        spec:
+            imagePullSecrets:
+                -   name: harbor-secret
+            containers:
+                -   name: outstation
+                    image: 1.2.3.4/scada/outstation
+                    ports:
+                        -   containerPort: 777
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: dnp3-outstation-service
+    namespace: scada-grita
+spec:
+    selector:
+        app: dnp3-outstation
+    type: NodePort  # Bisa diganti ClusterIP jika tidak perlu akses dari luar
+    ports:
+        -   name: dnp3-outstation-port-777
+            protocol: TCP
+            port: 777
+            targetPort: 777
+            nodePort: 777
