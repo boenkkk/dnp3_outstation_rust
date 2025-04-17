@@ -7,7 +7,7 @@ set -e
 APP_NAME="dnp3-outstation"
 DOCKERFILE="Dockerfile"
 REGISTRY_PATH="1.2.3.4/scada"
-NAMESPACE="scada-grita"
+NAMESPACE="fep-dnp3"
 DEPLOY_FILE="k8s-deploy.yaml"
 CONFIG_FILE="k8s-config.yaml"
 FULL_IMAGE_NAME="$REGISTRY_PATH/$APP_NAME"
