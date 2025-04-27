@@ -6,7 +6,7 @@ DOCKERFILE_PATH="."
 NUM_CONTAINERS=10
 NETWORK="scada-network"
 BASE_IP_ADDR="10.0.11"
-BASE_PORT=11180
+BASE_PORT=27000
 
 # Step 1: Build the Docker image
 echo "Building Docker image: $BASE_NAME"
@@ -17,7 +17,18 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# Step 2: Create containers with incrementing names
+# Step 2: Remove existing containers if any
+for i in $(seq 1 $NUM_CONTAINERS); do
+  CONTAINER_NAME="${BASE_NAME}_${i}"
+  
+  # Check if the container exists and remove it
+  if sudo docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
+    echo "Removing existing container: $CONTAINER_NAME"
+    sudo docker rm -f "$CONTAINER_NAME"
+  fi
+done
+
+# Step 3: Create containers with incrementing names
 for i in $(seq 1 $NUM_CONTAINERS); do
   CONTAINER_NAME="${BASE_NAME}_${i}"
   # Incrementing IP address
