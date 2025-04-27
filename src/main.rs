@@ -45,11 +45,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let master_address = env::var("DNP3_MASTER_ADDRESS")?.parse()?;
 
     if dnp3_outstation_type == "TCP" {
-        let tcp_server_address = env::var("DNP3_TCP_SERVER_ADDRESS").unwrap().to_string();
+        let tcp_server_address = env::var("DNP3_TCP_SERVER_ADDRESS").unwrap();
+        let tcp_server_port = env::var("DNP3_TCP_SERVER_PORT").unwrap();
+        let tcp_server_url = format!("{}:{}", tcp_server_address, tcp_server_port);
 
         // Run the TCP server
         // Parse the address and start the server
-        let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_address.parse()?);
+        let server = Server::new_tcp_server(LinkErrorMode::Close, tcp_server_url.parse()?);
         run_tcp(server, outstation_address, master_address).await?;
     } else if dnp3_outstation_type == "SERIAL" {
         let dnp3_serial_port = env::var("DNP3_SERIAL_PORT").unwrap().to_string();
