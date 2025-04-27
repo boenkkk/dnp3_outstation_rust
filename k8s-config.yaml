@@ -4,11 +4,28 @@ metadata:
     name: dnp3-outstation-config
     namespace: fep-dnp3
 data:
+    ### dnp3 endpoint
+    # TCP or SERIAL
     DNP3_OUTSTATION_TYPE: "TCP"
     DNP3_SERIAL_PORT: "COM17"
-    DNP3_TCP_SERVER_ADDRESS: "0.0.0.0:777"
+    DNP3_TCP_SERVER_ADDRESS: "0.0.0.0"
+    DNP3_TCP_SERVER_PORT: "777"
+    # OUTSTATION CONFIG
     DNP3_OUTSTATION_ADDRESS: "1"
     DNP3_MASTER_ADDRESS: "2"
+    #Nothing,Header,ObjectHeaders,ObjectValues,
+    DNP3_OUTSTATION_LEVEL_APPLICATION: "Nothing"
+    #Nothing,Header,Payload,
+    DNP3_OUTSTATION_LEVEL_TRANSPORT: "Nothing"
+    #Nothing,Header,Payload,
+    DNP3_OUTSTATION_LEVEL_LINK: "Nothing"
+    #Nothing,Length,Data,
+    DNP3_OUTSTATION_LEVEL_PHYSICAL: "Nothing"
+
+    ## event buffer
+    # 10 for events that occur more frequently and are more important, such as binary statuses.
+    # 5 for events that tend to change less often or are less critical, such as analog measurements and counters.
+    # 3 for types of data that are rarely used, such as octet strings.
     DNP3_BINARY_MAX_EVENT_BUFFER: "10"
     DNP3_DOUBLE_BIT_BINARY_MAX_EVENT_BUFFER: "10"
     DNP3_BINARY_OUTPUT_STATUS_MAX_EVENT_BUFFER: "10"
@@ -17,35 +34,53 @@ data:
     DNP3_ANALOG_MAX_EVENT_BUFFER: "5"
     DNP3_ANALOG_OUTPUT_STATUS_MAX_EVENT_BUFFER: "5"
     DNP3_OCTET_STRING_MAX_EVENT_BUFFER: "3"
+
+    ### datapoint
+    ## binary input
     DNP3_BINARY_INPUT_TOTAL: "2"
     DNP3_BINARY_INPUT_INIT_VALUE: "[true,false]"
     DNP3_BINARY_INPUT_RANDOM_UPDATE: "true"
     DNP3_BINARY_INPUT_RANDOM_UPDATE_INTERVAL: "1000"
+    ## binary output
     DNP3_BINARY_OUTPUT_TOTAL: "2"
     DNP3_BINARY_OUTPUT_INIT_VALUE: "[false,true]"
     DNP3_BINARY_OUTPUT_RANDOM_UPDATE: "true"
     DNP3_BINARY_OUTPUT_RANDOM_UPDATE_INTERVAL: "1000"
+    ## analog input
     DNP3_ANALOG_INPUT_TOTAL: "2"
     DNP3_ANALOG_INPUT_INIT_VALUE: "[11.1,12.2,13.3,14.4,15.5,16.6,17.7,18.8,19.9,20.0,21.1,22.2,23.3,24.4,25.5,26.6,27.7,28.8,29.9,30.0]"
     DNP3_ANALOG_INPUT_RANDOM_UPDATE: "true"
     DNP3_ANALOG_INPUT_RANDOM_UPDATE_INTERVAL: "1000"
     DNP3_ANALOG_INPUT_RANGE: "[[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9],[49.1,50.9],[190.1,230.9]]"
+    ## analog output
     DNP3_ANALOG_OUTPUT_TOTAL: "2"
     DNP3_ANALOG_OUTPUT_INIT_VALUE: "[711.1,712.2]"
     DNP3_ANALOG_OUTPUT_RANDOM_UPDATE: "true"
     DNP3_ANALOG_OUTPUT_RANDOM_UPDATE_INTERVAL: "1000"
     DNP3_ANALOG_OUTPUT_RANGE: "[[149.1,150.9],[1190.1,1230.9]]"
+    ## double bit
+    # 0 => DoubleBit::Intermediate,
+    # 1 => DoubleBit::DeterminedOff,
+    # 2 => DoubleBit::DeterminedOn
     DNP3_DOUBLE_BIT_BINARY_INPUT_TOTAL: "2"
     DNP3_DOUBLE_BIT_BINARY_INPUT_INIT_VALUE: "[2,1]"
     DNP3_DOUBLE_BIT_BINARY_INPUT_RANDOM_UPDATE: "true"
     DNP3_DOUBLE_BIT_BINARY_INPUT_RANDOM_UPDATE_INTERVAL: "1000"
+    ## counter
     DNP3_COUNTER_TOTAL: "2"
     DNP3_COUNTER_INIT_VALUE: "[7,8]"
     DNP3_COUNTER_RANDOM_UPDATE: "true"
     DNP3_COUNTER_RANDOM_UPDATE_INTERVAL: "1000"
     DNP3_COUNTER_RANGE: "[[14,15],[119,123]]"
+    ## frozen counter
     DNP3_FROZEN_COUNTER_TOTAL: "2"
     DNP3_FROZEN_COUNTER_INIT_VALUE: "[17,18]"
     DNP3_FROZEN_COUNTER_RANDOM_UPDATE: "true"
     DNP3_FROZEN_COUNTER_RANDOM_UPDATE_INTERVAL: "1000"
     DNP3_FROZEN_COUNTER_RANGE: "[[114,115],[1119,1123]]"
+    ## octet string
+    DNP3_OCTET_STRING_TOTAL: "2"
+    DNP3_OCTET_STRING_INIT_VALUE: "['aaa','bbb']"
+    DNP3_OCTET_STRING_RANDOM_UPDATE: "true"
+    DNP3_OCTET_STRING_RANDOM_UPDATE_INTERVAL: "5000"
+    DNP3_OCTET_STRING_MAX_LENGTH: "[7,3]"
