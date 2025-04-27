@@ -12,6 +12,8 @@ mod counter;
 mod double_bit_binary_input;
 #[path = "frozen_counter.rs"]
 mod frozen_counter;
+#[path = "octet_string.rs"]
+mod octet_string;
 
 use analog_input::initial_analog_input;
 use analog_output::initial_analog_output;
@@ -20,9 +22,9 @@ use binary_output::initial_binary_output;
 use counter::initial_counter;
 use double_bit_binary_input::initial_double_bit_binary_input;
 use frozen_counter::initial_frozen_counter;
+use octet_string::initial_octet_string;
 
 use dnp3::app::attr::{AttrProp, StringAttr};
-use dnp3::outstation::database::{Add, EventClass, OctetStringConfig};
 use dnp3::outstation::OutstationHandle;
 
 pub fn initialize_database(outstation: &OutstationHandle) {
@@ -35,8 +37,8 @@ pub fn initialize_database(outstation: &OutstationHandle) {
             AttrProp::writable(),
             StringAttr::UserAssignedLocation.with_value("Bend, OR"),
         );
-        db.add(0, Some(EventClass::Class1), OctetStringConfig);
 
+        initial_octet_string(db);
         initial_binary_input(db);
         initial_binary_output(db);
         initial_analog_input(db);

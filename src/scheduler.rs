@@ -12,6 +12,8 @@ mod counter;
 mod double_bit_binary_input;
 #[path = "datapoint/frozen_counter.rs"]
 mod frozen_counter;
+#[path = "datapoint/octet_string.rs"]
+mod octet_string;
 
 use analog_input::update_analog_input_value;
 use analog_output::update_analog_output_value;
@@ -20,10 +22,8 @@ use binary_output::update_binary_output_value;
 use counter::update_counter;
 use double_bit_binary_input::update_double_bit_binary_input;
 use frozen_counter::update_frozen_counter;
+use octet_string::update_octet_string_value;
 
-use crate::common_util::generate_random_string;
-use dnp3::app::measurement::OctetString;
-use dnp3::outstation::database::{Update, UpdateOptions};
 use dnp3::outstation::OutstationHandle;
 use std::sync::Arc;
 use std::thread;
@@ -43,12 +43,8 @@ pub fn run_scheduler(outstation: Arc<OutstationHandle>) {
 
 pub fn generate_random_update(outstation: &OutstationHandle) {
     outstation.transaction(|db| {
-        let value_string = generate_random_string(8);
         // update data
-        if let Ok(octet_string) = OctetString::new(value_string.as_bytes()) {
-            db.update(0, &octet_string, UpdateOptions::detect_event());
-        }
-
+        update_octet_string_value(db);
         update_binary_input_value(db);
         update_binary_output_value(db);
         update_analog_input_value(db);
