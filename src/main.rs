@@ -39,7 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Load environment variables from .env file
     dotenv().ok();
 
-    // Get the address from the environment variable or default to "0.0.0.0:777"
+    // Get the address from the environment variable
     let dnp3_outstation_type = env::var("DNP3_OUTSTATION_TYPE").unwrap().to_string();
     let outstation_address = env::var("DNP3_OUTSTATION_ADDRESS")?.parse()?;
     let master_address = env::var("DNP3_MASTER_ADDRESS")?.parse()?;

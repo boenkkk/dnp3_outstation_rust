@@ -4,7 +4,7 @@ metadata:
     name: dnp3-outstation-deployment
     namespace: fep-dnp3
 spec:
-    replicas: 3
+    replicas: 1
     selector:
         matchLabels:
             app: dnp3-outstation
@@ -19,7 +19,7 @@ spec:
                 -   name: dnp3-outstation
                     image: 1.2.3.4/scada/dnp3-outstation:latest
                     ports:
-                        -   containerPort: 777
+                        -   containerPort: 7777
                     envFrom:
                         -   configMapRef:
                                 name: dnp3-outstation-config
@@ -34,8 +34,8 @@ spec:
         app: dnp3-outstation
     type: NodePort
     ports:
-        -   name: dnp3-outstation-port-777
+        -   name: dnp3-outstation-port-7777
             protocol: TCP
-            port: 777
-            targetPort: 777
+            port: 7777
+            targetPort: 7777
             nodePort: 31777

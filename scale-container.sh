@@ -44,7 +44,7 @@ for i in $(seq 1 $NUM_CONTAINERS); do
     --hostname "$CONTAINER_NAME" \
     --network "$NETWORK" \
     --ip "$IP_ADDR" \
-    -p "$PORT:777" \
+    -p "$PORT:7777" \
     --env-file .env \
     "$BASE_NAME"
 
